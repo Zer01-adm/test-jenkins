@@ -1,10 +1,51 @@
-/* Requires the Docker Pipeline plugin */
 pipeline {
-    agent { docker { image 'python:3.13.2-alpine3.21' } }
+    agent any
+
+    environment {
+        IMAGE_NAME = "hello-world"
+        IMAGE_TAG = "latest"
+        MINIKUBE_VM = "idir@192.168.1.14"  // Remplace par l'IP/hostname de ta VM Minikube
+    }
+
     stages {
-        stage('build') {
+        stage('Checkout') {
             steps {
-                sh 'python --version'
+                git 'https://github.com/Zer01-adm/test-jenkins'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t $IMAGE_NAME:$IMAGE_TAG .'
+            }
+        }
+
+        stage('Save and Transfer Image') {
+            steps {
+                sh """
+                    docker save $IMAGE_NAME:$IMAGE_TAG | bzip2 > $IMAGE_NAME.tar.bz2
+                    scp $IMAGE_NAME.tar.bz2 $MINIKUBE_VM:/tmp/
+                """
+            }
+        }
+
+        stage('Load Image on Minikube') {
+            steps {
+                sshagent(['minikube-ssh-credentials']) {
+                    sh """
+                        ssh $MINIKUBE_VM 'bunzip2 -c /tmp/$IMAGE_NAME.tar.bz2 | docker load'
+                    """
+                }
+            }
+        }
+
+        stage('Deploy to Minikube') {
+            steps {
+                sshagent(['minikube-ssh-credentials']) {
+                    sh """
+                        ssh $MINIKUBE_VM 'kubectl set image deployment/hello-world hello-world=$IMAGE_NAME:$IMAGE_TAG --record || kubectl apply -f deployment.yaml'
+                    """
+                }
             }
         }
     }

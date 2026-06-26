@@ -16,7 +16,7 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh 'ansible -i inventory.yaml localhost -m ping'
+                sh 'ansible -i ansible/inventory.yaml localhost -m ping'
             }
         }
     }

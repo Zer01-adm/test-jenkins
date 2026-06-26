@@ -1,6 +1,6 @@
 /* Requires the Docker Pipeline plugin */
 pipeline {
-    agent { docker { image 'python:3.13.2-alpine3.21' } }
+    agent { docker { image 'node:24.18.0-alpine3.24' } }
 
     environment {
         IMAGE_NAME = "hello-world"

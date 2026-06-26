@@ -19,6 +19,12 @@ pipeline {
                 sh 'echo "Tests OK"'
             }
         }
+
+        stage('view') {
+            steps {
+                sh 'ls'
+            }
+        }
     }
 
     post {

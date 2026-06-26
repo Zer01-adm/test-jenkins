@@ -1,5 +1,5 @@
 pipeline {
-  agent { label 'docker-agent' }
+  agent { label 'mynode' }
 
   stages {
     stage('Check docker') {

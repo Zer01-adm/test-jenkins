@@ -1,0 +1,7 @@
+- name: ""
+  hosts: localhost
+
+  roles:
+    - role: terraform_init
+      vars:
+        terraform_init_terraform_dir: "{{ terraform_dir }}"

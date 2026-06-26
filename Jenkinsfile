@@ -6,6 +6,7 @@ pipeline {
         IMAGE_NAME = "hello-world"
         IMAGE_TAG = "latest"
         K3S_VM = "idir@172.26.25.5"
+    }
 
 
     stages {

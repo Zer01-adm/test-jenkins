@@ -1,18 +1,22 @@
 pipeline {
-  agent { label 'mynode' }
+  agent none
 
   stages {
-    stage('Check docker') {
+    stage('Build image') {
+      agent { label 'docker' }
       steps {
         sh 'whoami'
-        sh 'hostname'
         sh 'docker version'
+        sh 'docker build -t test-jenkins:latest .'
       }
     }
 
-    stage('Build image') {
+    stage('Check ansible') {
+      agent { label 'ansible' }
       steps {
-        sh 'docker build -t test-jenkins:latest .'
+        sh 'whoami'
+        sh 'ansible --version'
+        sh 'ansible-playbook --version'
       }
     }
   }

@@ -16,13 +16,7 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh 'echo "Tests OK"'
-            }
-        }
-
-        stage('view') {
-            steps {
-                sh 'ls'
+                sh 'ansible -i inventory.yaml localhost -m ping'
             }
         }
     }

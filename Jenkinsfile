@@ -3,7 +3,7 @@ pipeline {
 
   stages {
     stage('Build image') {
-      agent { label 'docker' }
+      agent { label 'mynode' }
       steps {
         sh 'whoami'
         sh 'docker version'

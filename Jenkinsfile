@@ -1,32 +1,10 @@
 pipeline {
-    agent any
-
+    agent { docker { image 'python:3.13.2-alpine3.21' } }
     stages {
-        stage('Checkout') {
+        stage('build') {
             steps {
-                checkout scm
+                sh 'python --version'
             }
-        }
-
-        stage('Build') {
-            steps {
-                sh 'echo "Build en cours..."'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                sh 'ansible -i ansible/inventory.yaml localhost -m ping'
-            }
-        }
-    }
-
-    post {
-        success {
-            echo 'Pipeline terminé avec succès'
-        }
-        failure {
-            echo 'Pipeline en échec'
         }
     }
 }

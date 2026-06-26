@@ -10,12 +10,12 @@ pipeline {
 
         stage('Test Ansible') {
             steps {
-                sshagent(credentials: ['ssh-pass-ansible-vm']) {
+                withCredentials([usernamePassword(credentialsId: 'ssh-pass-ansible-vm', usernameVariable: 'SSH_USER', passwordVariable: 'SSH_PASS')]) {
                   sh '''
-                    ssh -o StrictHostKeyChecking=no idir@172.26.25.5 \
-                      "sudo ansible --version && ansible -i /home/ansible/inventory.yaml localhost -m ping"
+                    sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no $SSH_USER@172.26.25.5 \
+                      "ansible --version && ansible -i /home/ansible/inventory.yaml localhost -m ping"
                   '''
-                }
+}
             }
         }
     }

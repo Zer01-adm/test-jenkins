@@ -10,7 +10,7 @@ pipeline {
 
         stage('Test Ansible') {
             steps {
-                sshagent(credentials: ['ssh-key-ansible-vm']) {
+                sshagent(credentials: ['ssh-pass-ansible-vm']) {
                   sh '''
                     ssh -o StrictHostKeyChecking=no idir@172.26.25.5 \
                       "sudo ansible --version && ansible -i /home/ansible/inventory.yaml localhost -m ping"

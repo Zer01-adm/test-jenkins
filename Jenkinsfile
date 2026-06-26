@@ -8,15 +8,14 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Test Ansible') {
             steps {
-                sh 'echo "Build en cours..."'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                sh 'ansible -i ansible/inventory.yaml localhost -m ping'
+                sshagent(credentials: ['ssh-key-ansible-vm']) {
+                  sh '''
+                    ssh -o StrictHostKeyChecking=no ansible@172.26.25.5 \
+                      "ansible --version && ansible -i /home/ansible/inventory.yaml localhost -m ping"
+                  '''
+                }
             }
         }
     }
